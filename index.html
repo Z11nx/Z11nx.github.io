@@ -19,7 +19,8 @@
             width: 100%;
             box-sizing: border-box;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .brand {
@@ -30,6 +31,69 @@
             color: #ffffff;
             text-decoration: none;
             letter-spacing: 1px;
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-btn.active {
+            transform: rotate(90deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            padding-top: 10px;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+
+        .dropdown-content.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            display: block;
+            padding: 8px 0;
+            font-size: 24px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            text-align: right;
+        }
+
+        .dropdown-content.show a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .dropdown-content a:nth-child(1) { transition-delay: 0.1s; }
+        .dropdown-content a:nth-child(2) { transition-delay: 0.15s; }
+        .dropdown-content a:nth-child(3) { transition-delay: 0.2s; }
+        .dropdown-content a:nth-child(4) { transition-delay: 0.25s; }
+        .dropdown-content a:nth-child(5) { transition-delay: 0.3s; }
+
+        .dropdown-content a:hover {
+            opacity: 0.7;
         }
 
         main {
@@ -102,6 +166,15 @@
 <body>
     <header>
         <a href="#" class="brand">Intervisions</a>
+        <div class="nav-dropdown">
+            <button class="dropdown-btn">☰</button>
+            <div class="dropdown-content">
+                <a href="#">Home</a>
+                <a href="#">Projects</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
     </header>
     <main>
         <div class="carousel-container">
@@ -110,13 +183,16 @@
                     <img src="images/000072100010-5.jpg" alt="Photo 1">
                 </div>
                 <div class="slide">
-                    <img src="images/000041360008-2.jpg" alt="Photo 2">
+                    <img src="images/000072110028.jpg" alt="Photo 2">
                 </div>
                 <div class="slide">
-                    <img src="images/000052910031.jpg" alt="Photo 3">
+                    <img src="images/000071790037.jpg" alt="Photo 3">
                 </div>
                 <div class="slide">
-                    <img src="images/000072110028.jpg" alt="Photo 4">
+                    <img src="images/000041360008-2.jpg" alt="Photo 4">
+                </div>
+                <div class="slide">
+                    <img src="images/000052910031.jpg" alt="Photo 5">
                 </div>
             </div>
             <button class="nav-button prev">‹</button>
@@ -125,6 +201,7 @@
     </main>
 
     <script>
+        // Carousel Navigation
         const carousel = document.querySelector('.carousel');
         const slides = document.querySelectorAll('.slide');
         let currentSlide = 0;
@@ -142,6 +219,25 @@
         function updateCarousel() {
             carousel.style.transform = `translateX(-${currentSlide * 25}%)`;
         }
+
+        // Dropdown Navigation
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        dropdownBtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('show');
+            dropdownBtn.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.matches('.dropdown-btn')) {
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                    dropdownBtn.classList.remove('active');
+                }
+            }
+        });
     </script>
 </body>
 </html>
