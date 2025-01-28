@@ -113,18 +113,28 @@
         }
 
         .carousel {
-            display: flex;
-            width: 500%;
-            transition: transform 0.5s ease-in-out;
+            position: relative;
+            width: 100%;
+            height: 80vh;
         }
 
         .slide {
-            width: 20%;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.5s;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 0 20px;
             box-sizing: border-box;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         .slide img {
@@ -169,17 +179,16 @@
         <div class="nav-dropdown">
             <button class="dropdown-btn">☰</button>
             <div class="dropdown-content">
-                <a href="#">Home</a>
+                <a href="index.html">Home</a>
                 <a href="#">Projects</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
+                <a href="about.html">About</a>
             </div>
         </div>
     </header>
     <main>
         <div class="carousel-container">
             <div class="carousel">
-                <div class="slide">
+                <div class="slide active">
                     <img src="images/000072100010-5.jpg" alt="Photo 1">
                 </div>
                 <div class="slide">
@@ -201,24 +210,28 @@
     </main>
 
     <script>
-        // Carousel Navigation
-        const carousel = document.querySelector('.carousel');
         const slides = document.querySelectorAll('.slide');
         let currentSlide = 0;
 
+        function showSlide(index) {
+            // Remove active class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Add active class to current slide
+            slides[index].classList.add('active');
+        }
+
         document.querySelector('.next').addEventListener('click', () => {
             currentSlide = (currentSlide + 1) % slides.length;
-            updateCarousel();
+            showSlide(currentSlide);
         });
 
         document.querySelector('.prev').addEventListener('click', () => {
             currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            updateCarousel();
+            showSlide(currentSlide);
         });
-
-        function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentSlide * 20}%)`;
-        }
 
         // Dropdown Navigation
         const dropdownBtn = document.querySelector('.dropdown-btn');
