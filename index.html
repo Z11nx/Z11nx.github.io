@@ -114,12 +114,12 @@
 
         .carousel {
             display: flex;
-            width: 400%;
+            width: 500%;
             transition: transform 0.5s ease-in-out;
         }
 
         .slide {
-            width: 25%;
+            width: 20%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -217,7 +217,7 @@
         });
 
         function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentSlide * 25}%)`;
+            carousel.style.transform = `translateX(-${currentSlide * 20}%)`;
         }
 
         // Dropdown Navigation
