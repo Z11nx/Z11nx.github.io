@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
@@ -134,6 +135,62 @@
             margin: 0 auto;
             color: #ffffff;
             font-family: 'Cormorant Garamond', sans-serif;
+        }
+
+        .about-content a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Mobile-friendly styles */
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .brand {
+                font-size: 32px;
+            }
+
+            .about-container {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .about-content {
+                font-size: 18px;
+                line-height: 1.8;
+                padding: 0 15px;
+            }
+
+            .about-image {
+                margin-bottom: 30px;
+            }
+
+            .about-image img {
+                max-height: 300px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand {
+                font-size: 28px;
+            }
+
+            .dropdown-btn {
+                font-size: 24px;
+            }
+
+            .dropdown-content a {
+                font-size: 20px;
+                padding: 12px 0;
+            }
+
+            .about-content {
+                font-size: 16px;
+                line-height: 1.6;
+            }
         }
     </style>
 </head>
