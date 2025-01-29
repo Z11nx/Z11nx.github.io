@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
@@ -171,6 +172,82 @@
         .next {
             right: 10px;
         }
+
+        /* Mobile-friendly styles */
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .brand {
+                font-size: 32px;
+            }
+
+            .carousel-container {
+                width: 100vw;
+                height: auto;
+            }
+
+            .carousel {
+                height: 60vh;
+            }
+
+            .nav-button {
+                font-size: 24px;
+                padding: 10px;
+            }
+
+            .prev {
+                left: 5px;
+            }
+
+            .next {
+                right: 5px;
+            }
+
+            .slide img {
+                max-width: 100%;
+                max-height: 60vh;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand {
+                font-size: 28px;
+            }
+
+            .dropdown-btn {
+                font-size: 24px;
+            }
+
+            .dropdown-content a {
+                font-size: 20px;
+                padding: 12px 0;
+            }
+
+            .carousel {
+                height: 50vh;
+            }
+
+            .nav-button {
+                padding: 15px;
+                font-size: 28px;
+            }
+        }
+
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .carousel {
+                height: 80vh;
+            }
+
+            .slide img {
+                max-height: 80vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -214,12 +291,9 @@
         let currentSlide = 0;
 
         function showSlide(index) {
-            // Remove active class from all slides
             slides.forEach(slide => {
                 slide.classList.remove('active');
             });
-            
-            // Add active class to current slide
             slides[index].classList.add('active');
         }
 
@@ -233,7 +307,6 @@
             showSlide(currentSlide);
         });
 
-        // Dropdown Navigation
         const dropdownBtn = document.querySelector('.dropdown-btn');
         const dropdownContent = document.querySelector('.dropdown-content');
 
@@ -242,7 +315,6 @@
             dropdownBtn.classList.toggle('active');
         });
 
-        // Close dropdown when clicking outside
         window.addEventListener('click', (e) => {
             if (!e.target.matches('.dropdown-btn')) {
                 if (dropdownContent.classList.contains('show')) {
