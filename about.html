@@ -5,6 +5,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Instagram Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             margin: 0;
@@ -142,6 +144,45 @@
             text-decoration: none;
         }
 
+        /* Footer Styles */
+        footer {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px 150px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .instagram-icon {
+            color: #ffffff;
+            font-size: 24px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .instagram-icon:hover {
+            opacity: 1;
+        }
+
         /* Mobile-friendly styles */
         @media screen and (max-width: 768px) {
             header {
@@ -170,6 +211,16 @@
 
             .about-image img {
                 max-height: 300px;
+            }
+
+            footer {
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .footer-links {
+                margin-top: 15px;
             }
         }
 
@@ -201,7 +252,7 @@
             <button class="dropdown-btn">☰</button>
             <div class="dropdown-content">
                 <a href="index.html">Home</a>
-                <a href="#">Projects</a>
+                <a href="work.html">Selected Works</a>
                 <a href="about.html">About</a>
             </div>
         </div>
@@ -222,6 +273,14 @@
             </div>
         </div>
     </main>
+    <footer>
+        <div class="copyright">© 2025 Intervisions. All Rights Reserved.</div>
+        <div class="footer-links">
+            <a href="https://www.instagram.com/int3rvisions" target="_blank" class="instagram-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </footer>
 
     <script>
         // Dropdown Navigation
