@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Existing styles */
         body {
             margin: 0;
             display: flex;
@@ -23,7 +22,6 @@
             opacity: 1;
         }
 
-        /* Simplified fade-in animation */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -33,13 +31,11 @@
             }
         }
 
-        /* Add fade-in classes */
         .fade-in {
             opacity: 0;
             animation: fadeIn 1s ease-out forwards;
         }
 
-        /* Add animation delays for different elements */
         header .brand {
             animation-delay: 0.3s;
         }
@@ -56,7 +52,6 @@
             animation-delay: 0.9s;
         }
 
-        /* Rest of your existing styles */
         header {
             padding: 50px 150px;
             width: 100%;
@@ -64,6 +59,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1000;
         }
 
         .brand {
@@ -78,6 +75,7 @@
 
         .nav-dropdown {
             position: relative;
+            z-index: 1000;
         }
 
         .dropdown-btn {
@@ -88,6 +86,7 @@
             cursor: pointer;
             padding: 10px;
             transition: transform 0.3s ease;
+            z-index: 1000;
         }
 
         .dropdown-btn.active {
@@ -103,6 +102,9 @@
             opacity: 0;
             transform: translateY(-20px);
             transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 999;
         }
 
         .dropdown-content.show {
@@ -122,6 +124,7 @@
             transform: translateX(20px);
             transition: opacity 0.3s ease, transform 0.3s ease;
             text-align: right;
+            white-space: nowrap;
         }
 
         .dropdown-content.show a {
@@ -145,6 +148,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .image-container {
@@ -181,6 +186,8 @@
             justify-content: space-between;
             align-items: center;
             font-family: 'Cormorant Garamond', serif;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-links a {
@@ -211,7 +218,6 @@
             opacity: 1;
         }
 
-        /* Mobile-friendly styles */
         @media screen and (max-width: 768px) {
             header {
                 padding: 20px;
@@ -309,7 +315,6 @@
     </footer>
 
     <script>
-        // Add loaded class to body after a small delay
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 document.body.classList.add('loaded');

@@ -59,6 +59,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1000;
         }
 
         .brand {
@@ -73,6 +75,7 @@
 
         .nav-dropdown {
             position: relative;
+            z-index: 1000;
         }
 
         .dropdown-btn {
@@ -83,6 +86,7 @@
             cursor: pointer;
             padding: 10px;
             transition: transform 0.3s ease;
+            z-index: 1000;
         }
 
         .dropdown-btn.active {
@@ -98,6 +102,9 @@
             opacity: 0;
             transform: translateY(-20px);
             transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 999;
         }
 
         .dropdown-content.show {
@@ -117,6 +124,7 @@
             transform: translateX(20px);
             transition: opacity 0.3s ease, transform 0.3s ease;
             text-align: right;
+            white-space: nowrap;
         }
 
         .dropdown-content.show a {
@@ -140,6 +148,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .carousel-container {
@@ -218,6 +228,8 @@
             justify-content: space-between;
             align-items: center;
             font-family: 'Cormorant Garamond', serif;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-links a {
