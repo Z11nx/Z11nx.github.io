@@ -360,37 +360,8 @@
     </header>
     <main>
         <div class="carousel-container fade-in">
-            <div class="carousel">
-                <div class="slide active">
-                    <img src="images/1U6A0964.jpg" alt="Photo 1">
-                </div>
-                <div class="slide">
-                    <img src="images/000072110028.jpg" alt="Photo 2">
-                </div>
-                <div class="slide">
-                    <img src="images/000071790037.jpg" alt="Photo 3">
-                </div>
-                <div class="slide">
-                    <img src="images/000041360008-2.jpg" alt="Photo 4">
-                </div>
-                <div class="slide">
-                    <img src="images/000052910031.jpg" alt="Photo 5">
-                </div>
-                <div class="slide">
-                    <img src="images/1U6A1120-dehancer.jpg" alt="Photo 6">
-                </div>
-                <div class="slide">
-                    <img src="images/000072100022.jpg" alt="Photo 7">
-                </div>
-                <div class="slide">
-                    <img src="images/1U6A1025-1.jpg" alt="Photo 8">
-                </div>
-                <div class="slide">
-                    <img src="images/1U6A1258-3.jpg" alt="Photo 9">
-                </div>
-                <div class="slide">
-                    <img src="images/000052920033.jpg" alt="Photo 10">
-                </div>
+            <div class="carousel" id="image-carousel">
+                <!-- Slides will be generated dynamically by JavaScript -->
             </div>
             <button class="nav-button prev">‹</button>
             <button class="nav-button next">›</button>
@@ -406,48 +377,100 @@
     </footer>
 
     <script>
+        // Gallery configuration - Add your images here
+        const galleryImages = [
+            { src: "images/1U6A0964.jpg", alt: "Photo 1" },
+            { src: "images/000072110028.jpg", alt: "Photo 2" },
+            { src: "images/000071790037.jpg", alt: "Photo 3" },
+            { src: "images/000041360008-2.jpg", alt: "Photo 4" },
+            { src: "images/000052910031.jpg", alt: "Photo 5" },
+            { src: "images/1U6A1120-dehancer.jpg", alt: "Photo 6" },
+            { src: "images/000072100022.jpg", alt: "Photo 7" },
+            { src: "images/1U6A1025-1.jpg", alt: "Photo 8" },
+            { src: "images/1U6A1258-3.jpg", alt: "Photo 9" },
+            { src: "images/000052920033.jpg", alt: "Photo 10" },
+            { src: "images/000039520001-2.jpg", alt: "Photo 11" }
+            // Add more images here as needed:
+            // { src: "images/your-new-image.jpg", alt: "Photo 11" },
+            // { src: "images/another-image.jpg", alt: "Photo 12" },
+        ];
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the gallery
+            initGallery();
+            
+            // Page fade-in effect
             setTimeout(() => {
                 document.body.classList.add('loaded');
             }, 100);
-        });
+            
+            // Navigation menu toggle
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            const dropdownContent = document.querySelector('.dropdown-content');
 
-        const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
-
-        function showSlide(index) {
-            slides.forEach(slide => {
-                slide.classList.remove('active');
+            dropdownBtn.addEventListener('click', () => {
+                dropdownContent.classList.toggle('show');
+                dropdownBtn.classList.toggle('active');
             });
-            slides[index].classList.add('active');
-        }
 
-        document.querySelector('.next').addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        });
-
-        document.querySelector('.prev').addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(currentSlide);
-        });
-
-        const dropdownBtn = document.querySelector('.dropdown-btn');
-        const dropdownContent = document.querySelector('.dropdown-content');
-
-        dropdownBtn.addEventListener('click', () => {
-            dropdownContent.classList.toggle('show');
-            dropdownBtn.classList.toggle('active');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (!e.target.matches('.dropdown-btn')) {
-                if (dropdownContent.classList.contains('show')) {
-                    dropdownContent.classList.remove('show');
-                    dropdownBtn.classList.remove('active');
+            window.addEventListener('click', (e) => {
+                if (!e.target.matches('.dropdown-btn')) {
+                    if (dropdownContent.classList.contains('show')) {
+                        dropdownContent.classList.remove('show');
+                        dropdownBtn.classList.remove('active');
+                    }
                 }
-            }
+            });
         });
+
+        function initGallery() {
+            const carousel = document.getElementById('image-carousel');
+            let currentSlide = 0;
+            
+            // Generate slides dynamically
+            galleryImages.forEach((image, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide' + (index === 0 ? ' active' : '');
+                
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.alt;
+                
+                slide.appendChild(img);
+                carousel.appendChild(slide);
+            });
+            
+            // Set up navigation
+            const slides = document.querySelectorAll('.slide');
+            
+            function showSlide(index) {
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                slides[index].classList.add('active');
+            }
+
+            document.querySelector('.next').addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            });
+
+            document.querySelector('.prev').addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            });
+
+            // Optional: Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    showSlide(currentSlide);
+                } else if (e.key === 'ArrowLeft') {
+                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                    showSlide(currentSlide);
+                }
+            });
+        }
     </script>
 </body>
 </html>
