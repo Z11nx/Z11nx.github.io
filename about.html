@@ -7,16 +7,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --toggle-bg: #ffffff;
+            --toggle-fg: #000000;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --toggle-bg: #000000;
+            --toggle-fg: #ffffff;
+        }
+
         body {
             margin: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #000000;
+            background-color: var(--bg-color);
             font-family: Arial, sans-serif;
-            color: #ffffff;
+            color: var(--text-color);
             opacity: 0;
-            transition: opacity 1s ease-in;
+            transition: opacity 1s ease-in, background-color 0.3s ease, color 0.3s ease;
         }
 
         body.loaded {
@@ -68,14 +82,35 @@
             z-index: 1000;
         }
 
+        .theme-toggle {
+            background: var(--toggle-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle i {
+            color: var(--toggle-fg);
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
         .brand {
             font-family: 'Cormorant Garamond', serif;
             font-size: 42px;
             font-style: italic;
             font-weight: 500;
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             letter-spacing: 1px;
+            transition: color 0.3s ease;
         }
 
         .nav-dropdown {
@@ -86,11 +121,11 @@
         .dropdown-btn {
             background: none;
             border: none;
-            color: #ffffff;
+            color: var(--text-color);
             font-size: 30px;
             cursor: pointer;
             padding: 10px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, color 0.3s ease;
             z-index: 1000;
         }
 
@@ -119,7 +154,7 @@
         }
 
         .dropdown-content a {
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             font-family: 'Cormorant Garamond', serif;
             display: block;
@@ -127,7 +162,7 @@
             font-size: 24px;
             opacity: 0;
             transform: translateX(20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
             text-align: right;
             white-space: nowrap;
         }
@@ -184,18 +219,19 @@
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
-            color: #ffffff;
+            color: var(--text-color);
             font-family: 'Cormorant Garamond', sans-serif;
         }
 
         .about-content a {
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
 
         footer {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px 150px;
             display: flex;
             justify-content: space-between;
@@ -203,14 +239,15 @@
             font-family: 'Cormorant Garamond', serif;
             position: relative;
             z-index: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .footer-links a {
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             font-size: 18px;
             opacity: 0.7;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, color 0.3s ease;
         }
 
         .footer-links a:hover {
@@ -223,10 +260,10 @@
         }
 
         .instagram-icon {
-            color: #ffffff;
+            color: var(--text-color);
             font-size: 24px;
             opacity: 0.7;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, color 0.3s ease;
         }
 
         .instagram-icon:hover {
@@ -297,12 +334,17 @@
 <body>
     <header>
         <a href="index.html" class="brand fade-in">Intervisions</a>
-        <div class="nav-dropdown fade-in">
-            <button class="dropdown-btn">☰</button>
-            <div class="dropdown-content">
-                <a href="index.html">Home</a>
-                <a href="work.html">Selected Works</a>
-                <a href="about.html">About</a>
+        <div style="display: flex; align-items: center;">
+            <button class="theme-toggle fade-in" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i>
+            </button>
+            <div class="nav-dropdown fade-in">
+                <button class="dropdown-btn">☰</button>
+                <div class="dropdown-content">
+                    <a href="index.html">Home</a>
+                    <a href="work.html">Selected Works</a>
+                    <a href="about.html">About</a>
+                </div>
             </div>
         </div>
     </header>
@@ -331,6 +373,28 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle functionality
+            const themeToggle = document.querySelector('.theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
             setTimeout(() => {
                 document.body.classList.add('loaded');
             }, 100);
