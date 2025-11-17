@@ -32,6 +32,16 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Ensure font is loaded before content appears */
+        body.fonts-loading .about-content {
+            opacity: 0;
+        }
+
+        body.fonts-loaded .about-content {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -195,7 +205,7 @@
             max-width: 800px;
             margin: 0 auto;
             color: var(--text-color);
-            font-family: 'Cormorant Garamond', sans-serif;
+            font-family: 'Cormorant Garamond', serif;
         }
 
         .about-content a {
@@ -306,7 +316,7 @@
         }
     </style>
 </head>
-<body>
+<body class="fonts-loading">
     <header>
         <a href="index.html" class="brand">Austin Caldwell</a>
         <div style="display: flex; align-items: center;">
@@ -348,6 +358,28 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Font loading detection
+            if ('fonts' in document) {
+                // Use the Font Loading API (supported on modern browsers including iOS Safari)
+                Promise.all([
+                    document.fonts.load('500 1em "Cormorant Garamond"'),
+                    document.fonts.load('italic 500 1em "Cormorant Garamond"')
+                ]).then(() => {
+                    document.body.classList.remove('fonts-loading');
+                    document.body.classList.add('fonts-loaded');
+                }).catch(() => {
+                    // If font loading fails, still show content after timeout
+                    setTimeout(() => {
+                        document.body.classList.remove('fonts-loading');
+                        document.body.classList.add('fonts-loaded');
+                    }, 3000);
+                });
+            } else {
+                // Fallback for browsers without Font Loading API
+                document.body.classList.remove('fonts-loading');
+                document.body.classList.add('fonts-loaded');
+            }
+
             // Theme toggle functionality
             const themeToggle = document.querySelector('.theme-toggle');
             const themeIcon = themeToggle.querySelector('i');
