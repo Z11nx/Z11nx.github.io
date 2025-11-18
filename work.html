@@ -426,7 +426,32 @@
             { src: "images/1U6A2650-positive-positive.jpg", alt: "Photo 16" }
         ];
 
+        // Preload all images and track when they're loaded
+        let imagesLoaded = new Set();
+        
+        function preloadImages(imageArray) {
+            return Promise.all(
+                imageArray.map((image, index) => {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            imagesLoaded.add(index);
+                            resolve();
+                        };
+                        img.onerror = () => {
+                            imagesLoaded.add(index);
+                            resolve();
+                        };
+                        img.src = image.src;
+                    });
+                })
+            );
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Preload all images immediately
+            preloadImages(galleryImages);
+
             // Theme toggle functionality
             const themeToggle = document.querySelector('.theme-toggle');
             const themeIcon = themeToggle.querySelector('i');
@@ -492,10 +517,31 @@
             const slides = document.querySelectorAll('.slide');
             
             function showSlide(index) {
-                slides.forEach(slide => {
-                    slide.classList.remove('active');
-                });
-                slides[index].classList.add('active');
+                // Wait for image to be loaded before showing
+                if (imagesLoaded.has(index)) {
+                    slides.forEach(slide => {
+                        slide.classList.remove('active');
+                    });
+                    slides[index].classList.add('active');
+                } else {
+                    // If image isn't loaded yet, wait for it
+                    const img = slides[index].querySelector('img');
+                    if (img.complete) {
+                        imagesLoaded.add(index);
+                        slides.forEach(slide => {
+                            slide.classList.remove('active');
+                        });
+                        slides[index].classList.add('active');
+                    } else {
+                        img.onload = () => {
+                            imagesLoaded.add(index);
+                            slides.forEach(slide => {
+                                slide.classList.remove('active');
+                            });
+                            slides[index].classList.add('active');
+                        };
+                    }
+                }
             }
 
             document.querySelector('.next').addEventListener('click', () => {
