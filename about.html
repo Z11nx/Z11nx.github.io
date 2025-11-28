@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --toggle-bg: #ffffff;
+            --toggle-fg: #000000;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --toggle-bg: #000000;
+            --toggle-fg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: Arial, sans-serif;
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Ensure font is loaded before content appears */
+        body.fonts-loading .about-content {
+            opacity: 0;
+        }
+
+        body.fonts-loaded .about-content {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        header {
+            padding: 50px 150px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .theme-toggle {
+            background: var(--toggle-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle i {
+            color: var(--toggle-fg);
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-style: italic;
+            font-weight: 500;
+            color: var(--text-color);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-btn.active {
+            transform: rotate(90deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            padding-top: 10px;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 999;
+        }
+
+        .dropdown-content.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            display: block;
+            padding: 8px 0;
+            font-size: 24px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .dropdown-content.show a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .dropdown-content a:nth-child(1) { transition-delay: 0.1s; }
+        .dropdown-content a:nth-child(2) { transition-delay: 0.15s; }
+        .dropdown-content a:nth-child(3) { transition-delay: 0.2s; }
+        .dropdown-content a:nth-child(4) { transition-delay: 0.25s; }
+
+        .dropdown-content a:hover {
+            opacity: 0.7;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-container {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .about-image {
+            width: 100%;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            max-height: 400px;
+            width: auto;
+            height: auto;
+        }
+
+        .about-content {
+            font-size: 20px;
+            line-height: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-color);
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .about-content a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px 150px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            position: relative;
+            z-index: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 18px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .instagram-icon {
+            color: var(--text-color);
+            font-size: 24px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, color 0.3s ease;
+        }
+
+        .instagram-icon:hover {
+            opacity: 1;
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .brand {
+                font-size: 32px;
+            }
+
+            .about-container {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .about-content {
+                font-size: 18px;
+                line-height: 1.8;
+                padding: 0 15px;
+            }
+
+            .about-image {
+                margin-bottom: 30px;
+            }
+
+            .about-image img {
+                max-height: 300px;
+            }
+
+            footer {
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .footer-links {
+                margin-top: 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand {
+                font-size: 28px;
+            }
+
+            .dropdown-btn {
+                font-size: 24px;
+            }
+
+            .dropdown-content a {
+                font-size: 20px;
+                padding: 12px 0;
+            }
+
+            .about-content {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+        }
+    </style>
+</head>
+<body class="fonts-loading">
+    <header>
+        <a href="index.html" class="brand">Austin Caldwell</a>
+        <div style="display: flex; align-items: center;">
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i>
+            </button>
+            <div class="nav-dropdown">
+                <button class="dropdown-btn">☰</button>
+                <div class="dropdown-content">
+                    <a href="index.html">Home</a>
+                    <a href="work.html">Selected Works</a>
+                    <a href="portraits.html">Portraits</a>
+                    <a href="about.html">About</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="about-container fade-in">
+            <div class="about-image">
+                <img src="images/1U6A1754.jpg" alt="About Me">
+            </div>
+            <div class="about-content">
+                Austin is a photographer based in North Carolina working primarily with analog processes
+                
+                <p>inquiries: austinmca01@gmail.com</p>
+
+                <p>instagram: <a href="https://www.instagram.com/int3rvisions/">@intervisions</a></p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="copyright">© 2025 Austin Caldwell. All Rights Reserved.</div>
+        <div class="footer-links">
+            <a href="https://www.instagram.com/int3rvisions" target="_blank" class="instagram-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Font loading detection
+            if ('fonts' in document) {
+                // Use the Font Loading API (supported on modern browsers including iOS Safari)
+                Promise.all([
+                    document.fonts.load('500 1em "Cormorant Garamond"'),
+                    document.fonts.load('italic 500 1em "Cormorant Garamond"')
+                ]).then(() => {
+                    document.body.classList.remove('fonts-loading');
+                    document.body.classList.add('fonts-loaded');
+                }).catch(() => {
+                    // If font loading fails, still show content after timeout
+                    setTimeout(() => {
+                        document.body.classList.remove('fonts-loading');
+                        document.body.classList.add('fonts-loaded');
+                    }, 3000);
+                });
+            } else {
+                // Fallback for browsers without Font Loading API
+                document.body.classList.remove('fonts-loading');
+                document.body.classList.add('fonts-loaded');
+            }
+
+            // Theme toggle functionality
+            const themeToggle = document.querySelector('.theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        });
+
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        dropdownBtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('show');
+            dropdownBtn.classList.toggle('active');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.matches('.dropdown-btn')) {
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                    dropdownBtn.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

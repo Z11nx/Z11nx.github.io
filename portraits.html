@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --toggle-bg: #ffffff;
+            --toggle-fg: #000000;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --toggle-bg: #000000;
+            --toggle-fg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        header {
+            padding: 50px 150px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .theme-toggle {
+            background: var(--toggle-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle i {
+            color: var(--toggle-fg);
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-style: italic;
+            font-weight: 500;
+            color: var(--text-color);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-btn.active {
+            transform: rotate(90deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            padding-top: 10px;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 999;
+        }
+
+        .dropdown-content.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            display: block;
+            padding: 8px 0;
+            font-size: 24px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .dropdown-content.show a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .dropdown-content a:nth-child(1) { transition-delay: 0.1s; }
+        .dropdown-content a:nth-child(2) { transition-delay: 0.15s; }
+        .dropdown-content a:nth-child(3) { transition-delay: 0.2s; }
+        .dropdown-content a:nth-child(4) { transition-delay: 0.25s; }
+        .dropdown-content a:nth-child(5) { transition-delay: 0.3s; }
+
+        .dropdown-content a:hover {
+            opacity: 0.7;
+        }
+
+        main {
+            flex: 1;
+            padding: 60px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background-color: var(--bg-color);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            opacity: 0.9;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 2001;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 50px;
+            cursor: pointer;
+            padding: 20px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            z-index: 2001;
+        }
+
+        .lightbox-nav:hover {
+            opacity: 1;
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        footer {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px 150px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            position: relative;
+            z-index: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 18px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .instagram-icon {
+            color: var(--text-color);
+            font-size: 24px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, color 0.3s ease;
+        }
+
+        .instagram-icon:hover {
+            opacity: 1;
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 20px;
+                width: 100%;
+            }
+
+            .brand {
+                font-size: 32px;
+            }
+
+            main {
+                padding: 40px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 12px;
+            }
+
+            .lightbox-nav {
+                font-size: 40px;
+                padding: 10px;
+            }
+
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
+            }
+
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+                font-size: 35px;
+            }
+
+            footer {
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .footer-links {
+                margin-top: 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand {
+                font-size: 28px;
+            }
+
+            .dropdown-btn {
+                font-size: 24px;
+            }
+
+            .dropdown-content a {
+                font-size: 20px;
+                padding: 12px 0;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .gallery-item {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="brand">Austin Caldwell</a>
+        <div style="display: flex; align-items: center;">
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i>
+            </button>
+            <div class="nav-dropdown">
+                <button class="dropdown-btn">☰</button>
+                <div class="dropdown-content">
+                    <a href="index.html">Home</a>
+                    <a href="work.html">Selected Works</a>
+                    <a href="portraits.html">Portraits</a>
+                    <a href="about.html">About</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="gallery-grid fade-in" id="portrait-gallery">
+            <!-- Gallery items will be generated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close">&times;</button>
+        <button class="lightbox-nav lightbox-prev" aria-label="Previous">‹</button>
+        <button class="lightbox-nav lightbox-next" aria-label="Next">›</button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightbox-img">
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">© 2025 Austin Caldwell. All Rights Reserved.</div>
+        <div class="footer-links">
+            <a href="https://www.instagram.com/int3rvisions" target="_blank" class="instagram-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Portrait gallery configuration - Add your portrait images here
+        const portraitImages = [
+            { src: "portraits/1U6A2825-positive-2.jpg", alt: "Portrait 1" },
+            { src: "portraits/1U6A2556-instagram.jpg", alt: "Portrait 2" },
+            { src: "portraits/1U6A2629-positive-positive.jpg", alt: "Portrait 3" },
+            { src: "portraits/1U6A2650-positive-positive.jpg", alt: "Portrait 4" },
+            { src: "portraits/1U6A3060.jpg", alt: "Portrait 5" },
+            { src: "portraits/1U6A3032.jpg", alt: "Portrait 6" },
+            { src: "portraits/1U6A3087.jpg", alt: "Portrait 7" },
+            { src: "portraits/1U6A3233-positive.jpg", alt: "Portrait 8" }
+            // Add more portraits as needed
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle functionality
+            const themeToggle = document.querySelector('.theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Initialize gallery
+            initPortraitGallery();
+
+            // Dropdown navigation
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            dropdownBtn.addEventListener('click', () => {
+                dropdownContent.classList.toggle('show');
+                dropdownBtn.classList.toggle('active');
+            });
+
+            window.addEventListener('click', (e) => {
+                if (!e.target.matches('.dropdown-btn')) {
+                    if (dropdownContent.classList.contains('show')) {
+                        dropdownContent.classList.remove('show');
+                        dropdownBtn.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        function initPortraitGallery() {
+            const gallery = document.getElementById('portrait-gallery');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const closeBtn = document.querySelector('.lightbox-close');
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
+            let currentIndex = 0;
+
+            // Generate gallery items
+            portraitImages.forEach((image, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.alt;
+                img.loading = 'lazy';
+                
+                item.appendChild(img);
+                item.addEventListener('click', () => openLightbox(index));
+                gallery.appendChild(item);
+            });
+
+            // Lightbox functions
+            function openLightbox(index) {
+                currentIndex = index;
+                lightboxImg.src = portraitImages[index].src;
+                lightboxImg.alt = portraitImages[index].alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function showNext() {
+                currentIndex = (currentIndex + 1) % portraitImages.length;
+                lightboxImg.src = portraitImages[currentIndex].src;
+                lightboxImg.alt = portraitImages[currentIndex].alt;
+            }
+
+            function showPrev() {
+                currentIndex = (currentIndex - 1 + portraitImages.length) % portraitImages.length;
+                lightboxImg.src = portraitImages[currentIndex].src;
+                lightboxImg.alt = portraitImages[currentIndex].alt;
+            }
+
+            // Event listeners
+            closeBtn.addEventListener('click', closeLightbox);
+            nextBtn.addEventListener('click', showNext);
+            prevBtn.addEventListener('click', showPrev);
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('active')) return;
+                
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') showNext();
+                if (e.key === 'ArrowLeft') showPrev();
+            });
+        }
+    </script>
+</body>
+</html>
